@@ -1,0 +1,12 @@
+C:\Users\Jade Rickert\source\repos\PriceBookApplication\PriceBookApplication\bin\Debug\PriceBookApplication.exe.config
+C:\Users\Jade Rickert\source\repos\PriceBookApplication\PriceBookApplication\bin\Debug\PriceBookApplication.exe
+C:\Users\Jade Rickert\source\repos\PriceBookApplication\PriceBookApplication\bin\Debug\PriceBookApplication.pdb
+C:\Users\Jade Rickert\source\repos\PriceBookApplication\PriceBookApplication\obj\Debug\PriceBookApplication.csprojResolveAssemblyReference.cache
+C:\Users\Jade Rickert\source\repos\PriceBookApplication\PriceBookApplication\obj\Debug\PriceBookApplication.Main.resources
+C:\Users\Jade Rickert\source\repos\PriceBookApplication\PriceBookApplication\obj\Debug\PriceBookApplication.Properties.Resources.resources
+C:\Users\Jade Rickert\source\repos\PriceBookApplication\PriceBookApplication\obj\Debug\PriceBookApplication.csproj.GenerateResource.Cache
+C:\Users\Jade Rickert\source\repos\PriceBookApplication\PriceBookApplication\obj\Debug\PriceBookApplication.csproj.CoreCompileInputs.cache
+C:\Users\Jade Rickert\source\repos\PriceBookApplication\PriceBookApplication\obj\Debug\PriceBookApplication.exe
+C:\Users\Jade Rickert\source\repos\PriceBookApplication\PriceBookApplication\obj\Debug\PriceBookApplication.pdb
+C:\Users\Jade Rickert\source\repos\PriceBookApplication\PriceBookApplication\obj\Debug\PriceBookApplication.InvoiceDetails.resources
+C:\Users\Jade Rickert\source\repos\PriceBookApplication\PriceBookApplication\obj\Debug\PriceBookApplication.ExistingOrNewProduct.resources
