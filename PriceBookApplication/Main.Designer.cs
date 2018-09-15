@@ -39,6 +39,8 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.pbxExport = new System.Windows.Forms.PictureBox();
             this.pbxSearch = new System.Windows.Forms.PictureBox();
+            this.pbxUpload = new System.Windows.Forms.PictureBox();
+            this.pbxView = new System.Windows.Forms.PictureBox();
             this.pbxDelete = new System.Windows.Forms.PictureBox();
             this.pbxEdit = new System.Windows.Forms.PictureBox();
             this.pbxAdd = new System.Windows.Forms.PictureBox();
@@ -103,6 +105,8 @@
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbxExport)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbxSearch)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbxUpload)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbxView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbxDelete)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbxEdit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbxAdd)).BeginInit();
@@ -199,18 +203,21 @@
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.Controls.Add(this.pbxExport);
             this.panel1.Controls.Add(this.pbxSearch);
+            this.panel1.Controls.Add(this.pbxUpload);
+            this.panel1.Controls.Add(this.pbxView);
             this.panel1.Controls.Add(this.pbxDelete);
             this.panel1.Controls.Add(this.pbxEdit);
             this.panel1.Controls.Add(this.pbxAdd);
-            this.panel1.Location = new System.Drawing.Point(491, 12);
+            this.panel1.Location = new System.Drawing.Point(377, 12);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(281, 57);
+            this.panel1.Size = new System.Drawing.Size(395, 57);
             this.panel1.TabIndex = 0;
+            this.panel1.Visible = false;
             // 
             // pbxExport
             // 
             this.pbxExport.Image = ((System.Drawing.Image)(resources.GetObject("pbxExport.Image")));
-            this.pbxExport.Location = new System.Drawing.Point(227, 3);
+            this.pbxExport.Location = new System.Drawing.Point(339, 3);
             this.pbxExport.Name = "pbxExport";
             this.pbxExport.Size = new System.Drawing.Size(50, 50);
             this.pbxExport.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -220,12 +227,33 @@
             // pbxSearch
             // 
             this.pbxSearch.Image = ((System.Drawing.Image)(resources.GetObject("pbxSearch.Image")));
-            this.pbxSearch.Location = new System.Drawing.Point(171, 3);
+            this.pbxSearch.Location = new System.Drawing.Point(227, 4);
             this.pbxSearch.Name = "pbxSearch";
             this.pbxSearch.Size = new System.Drawing.Size(50, 50);
             this.pbxSearch.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbxSearch.TabIndex = 1;
             this.pbxSearch.TabStop = false;
+            // 
+            // pbxUpload
+            // 
+            this.pbxUpload.Image = ((System.Drawing.Image)(resources.GetObject("pbxUpload.Image")));
+            this.pbxUpload.Location = new System.Drawing.Point(283, 4);
+            this.pbxUpload.Name = "pbxUpload";
+            this.pbxUpload.Size = new System.Drawing.Size(50, 50);
+            this.pbxUpload.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbxUpload.TabIndex = 1;
+            this.pbxUpload.TabStop = false;
+            // 
+            // pbxView
+            // 
+            this.pbxView.Image = ((System.Drawing.Image)(resources.GetObject("pbxView.Image")));
+            this.pbxView.Location = new System.Drawing.Point(171, 4);
+            this.pbxView.Name = "pbxView";
+            this.pbxView.Size = new System.Drawing.Size(50, 50);
+            this.pbxView.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbxView.TabIndex = 1;
+            this.pbxView.TabStop = false;
+            this.pbxView.Click += new System.EventHandler(this.pbxView_Click);
             // 
             // pbxDelete
             // 
@@ -236,6 +264,7 @@
             this.pbxDelete.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbxDelete.TabIndex = 1;
             this.pbxDelete.TabStop = false;
+            this.pbxDelete.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pbxDelete_MouseClick);
             // 
             // pbxEdit
             // 
@@ -246,6 +275,7 @@
             this.pbxEdit.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbxEdit.TabIndex = 1;
             this.pbxEdit.TabStop = false;
+            this.pbxEdit.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pbxEdit_MouseClick);
             // 
             // pbxAdd
             // 
@@ -269,10 +299,10 @@
             this.dgvMain.Location = new System.Drawing.Point(0, 75);
             this.dgvMain.Name = "dgvMain";
             this.dgvMain.ReadOnly = true;
+            this.dgvMain.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvMain.Size = new System.Drawing.Size(784, 335);
             this.dgvMain.TabIndex = 1;
             this.dgvMain.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvMain_CellMouseClick);
-            this.dgvMain.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvMain_CellMouseDoubleClick);
             // 
             // statusStrip1
             // 
@@ -781,6 +811,8 @@
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbxExport)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbxSearch)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbxUpload)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbxView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbxDelete)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbxEdit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbxAdd)).EndInit();
@@ -867,6 +899,8 @@
         private System.Windows.Forms.Button btnVariantSave;
         private System.Windows.Forms.Button btnProductCancel;
         private System.Windows.Forms.Button btnProductSave;
+        private System.Windows.Forms.PictureBox pbxUpload;
+        private System.Windows.Forms.PictureBox pbxView;
     }
 }
 
