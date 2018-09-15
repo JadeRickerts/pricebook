@@ -74,6 +74,9 @@ namespace PriceBookApplication
             //storeFunction = false;
             //categoryFunction = false;
             //reportFunction = false;
+            tslblMode.Text = "PRODUCT MODE";
+            tslblInvoiceNumber.Text = "";
+            tslblInvoiceTotal.Text = "";
             pbxInvoice.BorderStyle = BorderStyle.None;
             pbxProduct.BorderStyle = BorderStyle.FixedSingle;
             pbxPromo.BorderStyle = BorderStyle.None;
@@ -192,7 +195,7 @@ namespace PriceBookApplication
                 }
             }
             //ADD NEW PRODUCT
-            else if (tslblMode.Text == "INVOICE PRODUCT ADD MODE")
+            else if (tslblMode.Text == "INVOICE PRODUCT ADD MODE" || tslblMode.Text == "PRODUCT MODE")
             {
                 Product product = new Product();
 
@@ -359,6 +362,57 @@ namespace PriceBookApplication
                 tslblInvoiceNumber.Text = row.Cells["Invoice Number"].Value.ToString();
                 tslblMode.Text = "INVOICE EDIT MODE";
             }
+            //EDIT PRODUCT
+            else if (tslblMode.Text == "PRODUCT MODE")
+            {
+                Product product = new Product();
+                bool productOrVariant = true;
+
+                ExistingOrNewProduct existingOrNewForm = new ExistingOrNewProduct(product, productOrVariant);
+                existingOrNewForm.ShowDialog();
+
+                if (product.newProduct == true)
+                {
+                    tcFunctionInput.Visible = true;
+                    tcFunctionInput.SelectedIndex = 3;
+                    tslblMode.Text = "PRODUCT EDIT MODE";
+                    MessageBox.Show("Select Product and Edit Product Details", "Editing Product", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    
+                    using (SqlConnection sqlConnection = new SqlConnection(connection))
+                    {
+                        try
+                        {
+                            string query = "SELECT [dbo].[Categories].[CategoryID] AS [Category ID], " +
+                                "CONCAT([dbo].[Categories].[CategoryName], ', ', [dbo].[Categories].[ParentCategory]) AS [Category] " +
+                                "FROM [dbo].[Categories]";
+                            sqlConnection.Open();
+                            SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                            SqlDataReader sqlDataReader;
+                            sqlDataReader = sqlCommand.ExecuteReader();
+                            DataTable dataTable = new DataTable();
+                            dataTable.Columns.Add("Category", typeof(string));
+                            dataTable.Columns.Add("Category ID", typeof(string));
+                            dataTable.Load(sqlDataReader);
+                            cmbxCategory.ValueMember = "Category ID";
+                            cmbxCategory.DisplayMember = "Category";
+                            cmbxCategory.DataSource = dataTable;
+                            sqlConnection.Close();
+                        }
+                        catch (Exception ex)
+                        {
+                            // write exception info to log or anything else
+                            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+                else if (product.newProduct == false)
+                {
+                    MessageBox.Show("Select Product and Edit Variants Details", "Editing Variant", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    tslblMode.Text = "VARIANT EDIT MODE";
+                    tcFunctionInput.Visible = true;
+                    tcFunctionInput.SelectedIndex = 2;
+                }
+            }
             
         }
 
@@ -460,8 +514,28 @@ namespace PriceBookApplication
                     MessageBox.Show(ex.Message);
                 }
             }
-            
-            
+            //DELETE PRODUCT
+            else if (tslblMode.Text == "PRODUCT MODE")
+            {
+                Product product = new Product();
+                bool productOrVariant = true;
+
+                ExistingOrNewProduct existingOrNewForm = new ExistingOrNewProduct(product, productOrVariant);
+                existingOrNewForm.ShowDialog();
+
+                if (product.newProduct == true)
+                {
+                    tcFunctionInput.Visible = false;
+                    tslblMode.Text = "PRODUCT DELETE MODE";
+                    MessageBox.Show("Select Product To Delete", "Deleting Product", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else if (product.newProduct == false)
+                {
+                    tcFunctionInput.Visible = false;
+                    tslblMode.Text = "VARIANT DELETE MODE";
+                    MessageBox.Show("Select Variant To Delete", "Deleting Variant", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
         }
 
         //====================================================================//
@@ -615,71 +689,151 @@ namespace PriceBookApplication
         //ADD NEW VARIANT TO PRODUCT
         private void btnVariantSave_Click(object sender, EventArgs e)
         {
-            using (SqlConnection sqlConnection = new SqlConnection(connection))
+            if (tslblMode.Text == "VARIANT MODE")
             {
-                //SQL START
-                sqlConnection.Open();
-                string query = "insert into [dbo].[Variants] " +
-                    "([Description], [Barcode], [BrandName], [PackSize], [ProductCode]) " +
-                    "VALUES (@Decription, @Barcode, @BrandName, @PackSize, @ProductCode);";
-                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
-                sqlCommand.Parameters.AddWithValue("@Decription", tbxDescription02.Text);
-                if (tbxBarCode.Text == "")
+                using (SqlConnection sqlConnection = new SqlConnection(connection))
                 {
-                    tbxBarCode.Text = " ";
+                    //SQL START
+                    sqlConnection.Open();
+                    string query = "insert into [dbo].[Variants] " +
+                        "([Description], [Barcode], [BrandName], [PackSize], [ProductCode]) " +
+                        "VALUES (@Decription, @Barcode, @BrandName, @PackSize, @ProductCode);";
+                    SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                    sqlCommand.Parameters.AddWithValue("@Decription", tbxDescription02.Text);
+                    if (tbxBarCode.Text == "")
+                    {
+                        tbxBarCode.Text = " ";
+                    }
+                    sqlCommand.Parameters.AddWithValue("@Barcode", tbxBarCode.Text);
+                    sqlCommand.Parameters.AddWithValue("@BrandName", tbxBrandName.Text);
+                    sqlCommand.Parameters.AddWithValue("@PackSize", tbxPackSize.Text);
+                    sqlCommand.Parameters.AddWithValue("@ProductCode", int.Parse(lblProductCode.Text));
+                    sqlCommand.ExecuteNonQuery();
+                    sqlConnection.Close();
+                    //SQL END
                 }
-                sqlCommand.Parameters.AddWithValue("@Barcode", tbxBarCode.Text);
-                sqlCommand.Parameters.AddWithValue("@BrandName", tbxBrandName.Text);
-                sqlCommand.Parameters.AddWithValue("@PackSize", tbxPackSize.Text);
-                sqlCommand.Parameters.AddWithValue("@ProductCode", int.Parse(lblProductCode.Text));
-                sqlCommand.ExecuteNonQuery();
-                sqlConnection.Close();
-                //SQL END
-            }
-            MessageBox.Show("Variant Saved", "Variant", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            if (tslblInvoiceNumber.Text != "")
-            {
-                tslblMode.Text = "INVOICE PRODUCT ADD MODE";
-                tcFunctionInput.Visible = false;
+                MessageBox.Show("Variant Saved", "Variant", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 loadProducts();
+                tcFunctionInput.Visible = false;
+                if (tslblInvoiceNumber.Text != "")
+                {
+                    tslblMode.Text = "INVOICE PRODUCT ADD MODE";
+                }
             }
+            else if (tslblMode.Text == "VARIANT EDIT MODE")
+            {
+                using (SqlConnection sqlConnection = new SqlConnection(connection))
+                {
+                    //SQL START
+                    sqlConnection.Open();
+                    string query = "UPDATE [dbo].[Variants] " +
+                            "SET [Description] = @Decription, [BrandName] = @BrandName, [PackSize] = @PackSize, [Barcode] = @Barcode " +
+                            "WHERE [dbo].[Variants].[VariantID] = @variantID";
+                    SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                    sqlCommand.Parameters.AddWithValue("@Decription", tbxDescription02.Text);
+                    if (tbxBarCode.Text == "")
+                    {
+                        tbxBarCode.Text = " ";
+                    }
+                    sqlCommand.Parameters.AddWithValue("@Barcode", tbxBarCode.Text);
+                    sqlCommand.Parameters.AddWithValue("@BrandName", tbxBrandName.Text);
+                    sqlCommand.Parameters.AddWithValue("@PackSize", tbxPackSize.Text);
+                    sqlCommand.Parameters.AddWithValue("@variantID", int.Parse(lblProductCode.Text));
+                    sqlCommand.ExecuteNonQuery();
+                    sqlConnection.Close();
+                    //SQL END
+                }
+                MessageBox.Show("Variant Edited", "Variant", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                loadProducts();
+                tcFunctionInput.Visible = false;
+            }
+            
         }
-        //ADD NEW PRODUCT
+        //ADD OR EDIT PRODUCT
         private void btnProductSave_Click(object sender, EventArgs e)
         {
-            using (SqlConnection sqlConnection = new SqlConnection(connection))
+            //ADD OR EDIT PRODUCT
+            if(tslblMode.Text == "PRODUCT MODE")
             {
-                //SQL START
-                sqlConnection.Open();
-                string query = "insert into [dbo].[Products] " +
-                    "([Description], [CategoryID], [MeasurementRate], [UoM], [Weighted]) " +
-                    "VALUES (@Decription, @CategoryID, @MeasurementRate, @UoM, @Weighted) " +
-                    "SET @ProductCode = SCOPE_IDENTITY(); ";
-                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
-                sqlCommand.Parameters.AddWithValue("@Decription", tbxDescription.Text);
-                sqlCommand.Parameters.AddWithValue("@CategoryID", int.Parse(cmbxCategory.SelectedValue.ToString()));
-                sqlCommand.Parameters.AddWithValue("@MeasurementRate", int.Parse(tbxRoM.Text));
-                sqlCommand.Parameters.AddWithValue("@UoM", tbxUoM.Text);
-                if (cbxWeighted.Checked == false)
+                using (SqlConnection sqlConnection = new SqlConnection(connection))
                 {
-                    sqlCommand.Parameters.AddWithValue("@Weighted", 0);
+                    //SQL START
+                    sqlConnection.Open();
+                    string query = "insert into [dbo].[Products] " +
+                        "([Description], [CategoryID], [MeasurementRate], [UoM], [Weighted]) " +
+                        "VALUES (@Decription, @CategoryID, @MeasurementRate, @UoM, @Weighted) " +
+                        "SET @ProductCode = SCOPE_IDENTITY(); ";
+                    SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                    sqlCommand.Parameters.AddWithValue("@Decription", tbxDescription.Text);
+                    sqlCommand.Parameters.AddWithValue("@CategoryID", int.Parse(cmbxCategory.SelectedValue.ToString()));
+                    sqlCommand.Parameters.AddWithValue("@MeasurementRate", int.Parse(tbxRoM.Text));
+                    sqlCommand.Parameters.AddWithValue("@UoM", tbxUoM.Text);
+                    if (cbxWeighted.Checked == false)
+                    {
+                        sqlCommand.Parameters.AddWithValue("@Weighted", 0);
+                    }
+                    else if (cbxWeighted.Checked == true)
+                    {
+                        sqlCommand.Parameters.AddWithValue("@Weighted", 1);
+                    }
+                    sqlCommand.Parameters.Add("@ProductCode", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    sqlCommand.ExecuteNonQuery();
+                    lblProductCode.Text = sqlCommand.Parameters["@ProductCode"].Value.ToString();
+                    sqlConnection.Close();
+                    //SQL END
                 }
-                else if (cbxWeighted.Checked == true)
-                {
-                    sqlCommand.Parameters.AddWithValue("@Weighted", 1);
-                }
-                sqlCommand.Parameters.Add("@ProductCode", SqlDbType.Int).Direction = ParameterDirection.Output;
-                sqlCommand.ExecuteNonQuery();
-                lblProductCode.Text = sqlCommand.Parameters["@ProductCode"].Value.ToString();
-                sqlConnection.Close();
-                //SQL END
+                MessageBox.Show("Product Saved", "Product", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                tcFunctionInput.SelectedIndex = 2;
+                tslblMode.Text = "VARIANT MODE";
             }
-            MessageBox.Show("Product Saved", "Product", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            tcFunctionInput.SelectedIndex = 2;
-            tslblMode.Text = "VARIANT MODE";
+            //EDIT PRODUCT
+            else if (tslblMode.Text == "PRODUCT EDIT MODE")
+            {
+                using (SqlConnection sqlConnection = new SqlConnection(connection))
+                {
+                    try
+                    {
+                        //SQL START
+                        string query;
+                        query = "UPDATE [dbo].[Products] " +
+                            "SET [Description] = @description, [UoM] = @uom, [Weighted] = @weighted, [MeasurementRate] = @rom, [CategoryID] = @category " +
+                            "WHERE [dbo].[Products].[ProductCode] = @productCode";
+                        SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                        sqlCommand.Parameters.AddWithValue("@description", tbxDescription.Text);
+                        sqlCommand.Parameters.AddWithValue("@category", int.Parse(cmbxCategory.SelectedValue.ToString()));
+                        sqlCommand.Parameters.AddWithValue("@rom", int.Parse(tbxRoM.Text));
+                        sqlCommand.Parameters.AddWithValue("@uom", tbxUoM.Text);
+                        if (cbxWeighted.Checked == false)
+                        {
+                            sqlCommand.Parameters.AddWithValue("@weighted", 0);
+                        }
+                        else if (cbxWeighted.Checked == true)
+                        {
+                            sqlCommand.Parameters.AddWithValue("@weighted", 1);
+                        }
+                        sqlCommand.Parameters.AddWithValue("@productCode", lblProductCode2.Text);
+                        sqlCommand.CommandType = CommandType.Text;
+                        sqlConnection.Open();
+                        sqlCommand.ExecuteNonQuery();
+                        sqlConnection.Close();
+                        //SQL END
+                        MessageBox.Show("Product Details Edited!", "Product", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        tcFunctionInput.Visible = false;
+                        loadProducts();
+                        tslblMode.Text = "PRODUCT MODE";
+                    }
+                    catch (System.Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                }
+            }
+            
         }
 
+        //====================================================================//
         //DATA GRID VIEW EVENTS
+        //====================================================================//
         private void dgvMain_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             //VIEW INVOICE DETAILS
@@ -758,9 +912,163 @@ namespace PriceBookApplication
                     MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+            //EDIT PRODUCT DETAILS
+            else if (tslblMode.Text == "PRODUCT EDIT MODE")
+            {
+                try
+                {
+                    if (e.RowIndex >= 0)
+                    {
+                        row = this.dgvMain.Rows[e.RowIndex];
+                        tbxDescription.Text = row.Cells["Product Description"].Value.ToString();
+                        tbxRoM.Text = row.Cells["Rate of Measure"].Value.ToString();
+                        tbxUoM.Text = row.Cells["UoM"].Value.ToString();
+                        if (row.Cells["Weighted"].Value.Equals(false))
+                        {
+                            tbxWeight.Enabled = false;
+                        }
+                        else if (row.Cells["Weighted"].Value.Equals(true))
+                        {
+                            tbxWeight.Enabled = true;
+                        }
+                        lblProductCode2.Text = row.Cells["ProductCode"].Value.ToString();
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            //EDIT VARIANT DETAILS
+            else if (tslblMode.Text == "VARIANT EDIT MODE")
+            {
+                try
+                {
+                    if (e.RowIndex >= 0)
+                    {
+                        row = this.dgvMain.Rows[e.RowIndex];
+                        tbxDescription02.Text = row.Cells["Variant Description"].Value.ToString();
+                        tbxBarCode.Text = row.Cells["Bar Code"].Value.ToString();
+                        tbxBrandName.Text = row.Cells["Brand Name"].Value.ToString();
+                        tbxPackSize.Text = row.Cells["Pack Size"].Value.ToString();
+                        lblUoMVariant.Text = row.Cells["UoM"].Value.ToString();
+                        lblProductCode.Text = row.Cells["VariantID"].Value.ToString();
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            //DELETE PRODUCT
+            else if (tslblMode.Text == "PRODUCT DELETE MODE")
+            {
+                try
+                {
+                    if (e.RowIndex >= 0)
+                    {
+                        row = this.dgvMain.Rows[e.RowIndex];
+                        DialogResult dialog = MessageBox.Show(string.Format("Are you sure you want to delete:\n{0} {1} {2}", 
+                            row.Cells["ProductCode"].Value.ToString(), row.Cells["Product Description"].Value.ToString(), row.Cells["UoM"].Value.ToString()), 
+                            "Delete Product", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                        if (dialog == DialogResult.Yes)
+                        {
+                            using (SqlConnection sqlConnection = new SqlConnection(connection))
+                            {
+                                try
+                                {
+                                    //SQL START
+                                    string query;
+                                    query = "UPDATE [dbo].[Products] " +
+                                        "SET [Deleted] = 1 " +
+                                        "WHERE [dbo].[Products].[ProductCode] = @productCode";
+                                    SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                                    sqlCommand.Parameters.AddWithValue("@productCode", Convert.ToInt32(row.Cells["ProductCode"].Value.ToString()));
+                                    sqlCommand.CommandType = CommandType.Text;
+                                    sqlConnection.Open();
+                                    sqlCommand.ExecuteNonQuery();
+                                    sqlConnection.Close();
+                                    //SQL END
+                                    MessageBox.Show("Product Deleted!", "Product", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    tcFunctionInput.Visible = false;
+                                    loadProducts();
+                                    tslblMode.Text = "PRODUCT MODE";
+                                }
+                                catch (System.Exception ex)
+                                {
+                                    MessageBox.Show(ex.Message);
+                                }
+                            }
+                        }
+                        else if (dialog == DialogResult.Cancel)
+                        {
+                            tslblMode.Text = "PRODUCT MODE";
+                        }
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            //DELETE VARIANT
+            else if (tslblMode.Text == "VARIANT DELETE MODE")
+            {
+                try
+                {
+                    if (e.RowIndex >= 0)
+                    {
+                        row = this.dgvMain.Rows[e.RowIndex];
+                        DialogResult dialog = MessageBox.Show(string.Format("Are you sure you want to delete:\n{0} {1} {2} {3}",
+                            row.Cells["VariantID"].Value.ToString(), row.Cells["Brand Name"].Value.ToString(), 
+                            row.Cells["Variant Description"].Value.ToString(), row.Cells["Pack Size"].Value.ToString()),
+                            "Delete Variant", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                        if (dialog == DialogResult.Yes)
+                        {
+                            using (SqlConnection sqlConnection = new SqlConnection(connection))
+                            {
+                                try
+                                {
+                                    //SQL START
+                                    string query;
+                                    query = "UPDATE [dbo].[Variants] " +
+                                        "SET [Deleted] = 1 " +
+                                        "WHERE [dbo].[Variants].[VariantID] = @variantID";
+                                    SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                                    sqlCommand.Parameters.AddWithValue("@variantID", Convert.ToInt32(row.Cells["VariantID"].Value.ToString()));
+                                    sqlCommand.CommandType = CommandType.Text;
+                                    sqlConnection.Open();
+                                    sqlCommand.ExecuteNonQuery();
+                                    sqlConnection.Close();
+                                    //SQL END
+                                    MessageBox.Show("Variant Deleted!", "Variant", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    tcFunctionInput.Visible = false;
+                                    loadProducts();
+                                    tslblMode.Text = "PRODUCT MODE";
+                                }
+                                catch (System.Exception ex)
+                                {
+                                    MessageBox.Show(ex.Message);
+                                }
+                            }
+                        }
+                        else if (dialog == DialogResult.Cancel)
+                        {
+                            tslblMode.Text = "PRODUCT MODE";
+                        }
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
 
+        //====================================================================//
         //METHODS
+        //====================================================================//
+        
         //INVOICE
         private void loadProducts()
         {
@@ -777,7 +1085,11 @@ namespace PriceBookApplication
                     "[dbo].[Products].[Weighted], " +
                     "[dbo].[Categories].[CategoryName] as [Subcategory], " +
                     "[dbo].[Variants].[VariantID] as [VariantID], " +
-                    "[dbo].[Variants].[ProductCode] as [ProductCode] " +
+                    "[dbo].[Variants].[ProductCode] as [ProductCode], " +
+                    "[dbo].[Products].[MeasurementRate] as [Rate of Measure], " +
+                    "[dbo].[Variants].[Barcode] as [Bar Code], " +
+                    "[dbo].[Variants].[Deleted] as [Variant Deleted], " +
+                    "[dbo].[Products].[Deleted] as [Product Deleted] " +
                     "from [dbo].[Variants]" +
                     "inner join [dbo].[Products] on [dbo].[Variants].[ProductCode] = [dbo].[Products].[ProductCode]" +
                     "inner join [dbo].[Categories] on [dbo].[Products].[CategoryID] = [dbo].[Categories].[CategoryID];";

@@ -95,6 +95,7 @@
             this.lblCategory = new System.Windows.Forms.Label();
             this.tbxDescription = new System.Windows.Forms.TextBox();
             this.lblDescription = new System.Windows.Forms.Label();
+            this.lblProductCode2 = new System.Windows.Forms.Label();
             this.objectPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbxReport)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbxStore)).BeginInit();
@@ -678,6 +679,7 @@
             this.tabPage3.Controls.Add(this.tbxUoM);
             this.tabPage3.Controls.Add(this.btnProductSave);
             this.tabPage3.Controls.Add(this.tbxRoM);
+            this.tabPage3.Controls.Add(this.lblProductCode2);
             this.tabPage3.Controls.Add(this.lblUoM);
             this.tabPage3.Controls.Add(this.lblRoM);
             this.tabPage3.Controls.Add(this.lblCategory);
@@ -786,6 +788,15 @@
             this.lblDescription.Size = new System.Drawing.Size(60, 13);
             this.lblDescription.TabIndex = 11;
             this.lblDescription.Text = "Description";
+            // 
+            // lblProductCode2
+            // 
+            this.lblProductCode2.AutoSize = true;
+            this.lblProductCode2.Location = new System.Drawing.Point(456, 5);
+            this.lblProductCode2.Name = "lblProductCode2";
+            this.lblProductCode2.Size = new System.Drawing.Size(72, 13);
+            this.lblProductCode2.TabIndex = 8;
+            this.lblProductCode2.Text = "Product Code";
             // 
             // Main
             // 
@@ -901,6 +912,7 @@
         private System.Windows.Forms.Button btnProductSave;
         private System.Windows.Forms.PictureBox pbxUpload;
         private System.Windows.Forms.PictureBox pbxView;
+        private System.Windows.Forms.Label lblProductCode2;
     }
 }
 

@@ -24,6 +24,18 @@ namespace PriceBookApplication
             newProduct = product;
         }
 
+        public ExistingOrNewProduct(Product product, bool productOrVariant)
+        {
+            InitializeComponent();
+            newProduct = product;
+            if (productOrVariant == true)
+            {
+                btnExisting.Text = "Variant";
+                btnNew.Text = "Product";
+                lblQuestion.Text = "Is it a Product or Variant?";
+            }
+        }
+
         public void btnNew_Click(object sender, EventArgs e)
         {
             newProduct.newProduct = true;
