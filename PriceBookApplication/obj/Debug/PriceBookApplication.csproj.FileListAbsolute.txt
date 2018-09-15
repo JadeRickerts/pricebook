@@ -20,3 +20,4 @@ C:\Users\CodeBeast\Documents\GitHub\pricebook\PriceBookApplication\obj\Debug\Pri
 C:\Users\CodeBeast\Documents\GitHub\pricebook\PriceBookApplication\obj\Debug\PriceBookApplication.Main.resources
 C:\Users\CodeBeast\Documents\GitHub\pricebook\PriceBookApplication\obj\Debug\PriceBookApplication.Properties.Resources.resources
 C:\Users\CodeBeast\Documents\GitHub\pricebook\PriceBookApplication\obj\Debug\PriceBookApplication.csproj.GenerateResource.Cache
+C:\Users\CodeBeast\Documents\GitHub\pricebook\PriceBookApplication\obj\Debug\PriceBookApplication.csprojResolveAssemblyReference.cache

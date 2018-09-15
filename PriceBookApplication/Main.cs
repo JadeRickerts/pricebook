@@ -19,6 +19,7 @@ namespace PriceBookApplication
                 BindingSource bindingSource = new BindingSource();
         decimal invoiceAmount = 0;
         decimal userInvoiceAmount = 0;
+        int invoiceSaved = 0;
 
         //bool invoiceFunction = false;
         //bool productFunction = false;
@@ -50,6 +51,9 @@ namespace PriceBookApplication
             //categoryFunction = false;
             //reportFunction = false;
             tslblMode.Text = "INVOICE MODE";
+            tslblInvoiceNumber.Text = "";
+            tslblInvoiceTotal.Text = "";
+            tcFunctionInput.Visible = false;
             pbxInvoice.BorderStyle = BorderStyle.FixedSingle;
             pbxProduct.BorderStyle = BorderStyle.None;
             pbxPromo.BorderStyle = BorderStyle.None;
@@ -58,6 +62,7 @@ namespace PriceBookApplication
             pbxReport.BorderStyle = BorderStyle.None;
             loadInvoices();
             panel1.Visible = true;
+            invoiceSaved = 0;
 
         }
 
@@ -150,6 +155,7 @@ namespace PriceBookApplication
         //====================================================================//
         
         //MOUSE CLICKS
+        //1.Add
         private void pbxAdd_MouseClick(object sender, MouseEventArgs e)
         {
             //ADD NEW INVOICE
@@ -233,27 +239,39 @@ namespace PriceBookApplication
                     tcFunctionInput.SelectedIndex = 2;
                 }
             }
+            //ADD INVOICE TO EXISTING INVOICE
+            else if (tslblMode.Text == "INVOICE VIEW MODE")
+            {
+                loadProducts();
+                invoiceAmount = decimal.Parse(tslblInvoiceTotal.Text);
+                tslblMode.Text = "INVOICE PRODUCT ADD MODE";
+            }
         }
 
+        //2.View
         private void pbxView_Click(object sender, EventArgs e)
         {
 
             if (tslblMode.Text == "INVOICE MODE")
             {
+                tslblInvoiceNumber.Text = row.Cells["Invoice Number"].Value.ToString();
+                tslblInvoiceTotal.Text = row.Cells["Total Invoice Amount"].Value.ToString();
+                invoiceSaved = Convert.ToInt32(row.Cells["Saved"].Value);
                 using (SqlConnection sqlConnection = new SqlConnection(connection))
                 {
                     sqlConnection.Open();
                     DataTable dataTable = new DataTable();
                     string command = "SELECT " +
-                    "CONCAT([dbo].[Variants].[BrandName], ' ', " +
-                        "[dbo].[Products].[Description], ' ', " +
-                        "[dbo].[Variants].[Description], ' ', " +
-                        "[dbo].[Variants].[PackSize], ' ', " +
-                        "[dbo].[Products].[UoM]) AS [Product Description], " +
-                    "[dbo].[InvoiceProducts].[Quantity] AS[Quantity], " +
-                    "[dbo].[InvoiceProducts].[Weight] AS[Weight], " +
+                    "[dbo].[Variants].[BrandName] AS [Brand Name]," +
+                    "[dbo].[Products].[Description] AS [Product Desc]," +
+                    "[dbo].[Variants].[Description] AS [Variant Desc]," +
+                    "[dbo].[Variants].[PackSize] AS [Pack Size]," +
+                    "[dbo].[Products].[UoM] AS [UOM]," +
+                    "[dbo].[InvoiceProducts].[Quantity] AS [Quantity], " +
+                    "[dbo].[InvoiceProducts].[Weight] AS [Weight], " +
                     "[dbo].[InvoiceProducts].[TotalPrice] AS [Total Price], " +
-                    "[dbo].[InvoiceProducts].[Sale] AS [Sale]" +
+                    "[dbo].[InvoiceProducts].[Sale] AS [Sale]," +
+                    "[dbo].[InvoiceProducts].[VariantID] AS [Stock Code]" +
                     "FROM [dbo].[InvoiceProducts]" +
                     "INNER JOIN [dbo].[Variants] ON [dbo].[InvoiceProducts].[VariantID] = [dbo].[Variants].[VariantID]" +
                     "INNER JOIN [dbo].[Products] ON [dbo].[Variants].[ProductCode] = [dbo].[Products].[ProductCode]" +
@@ -267,6 +285,29 @@ namespace PriceBookApplication
                         bindingSource.DataSource = dataTable;
                         dgvMain.DataSource = bindingSource;
                         tslblMode.Text = "INVOICE VIEW MODE";
+                        userInvoiceAmount = getSum();
+                        invoiceAmount = Convert.ToDecimal(tslblInvoiceTotal.Text);
+                        if (differenceCheck() && invoiceSaved == 0)
+                        {
+                            DialogResult saveInvoiceMessage = MessageBox.Show(string.Format("Invoice Amount: ${0}\nInvoice Products Total: ${1}" +
+                                "\nMark Invoice As Saved?", userInvoiceAmount, invoiceAmount), "Invoice", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                            if (saveInvoiceMessage == DialogResult.Yes)
+                            {
+                                tcFunctionInput.Visible = false;
+                                saveInvoice();
+                                loadInvoices();
+                                tslblMode.Text = "INVOICE MODE";
+                                invoiceAmount = 0;
+                                userInvoiceAmount = 0;
+                                tslblInvoiceTotal.Text = "";
+                                tslblInvoiceNumber.Text = "";
+                            }
+                            else if (saveInvoiceMessage == DialogResult.No)
+                            {
+                                //DO NOTHING
+                            }
+                        }
+
                     }
                     catch (Exception ex)
                     {
@@ -278,6 +319,7 @@ namespace PriceBookApplication
             }
         }
 
+        //3.Edit
         private void pbxEdit_MouseClick(object sender, MouseEventArgs e)
         {
             //EDIT INVOICE
@@ -320,60 +362,107 @@ namespace PriceBookApplication
             
         }
 
+        //4.Delete
         private void pbxDelete_MouseClick(object sender, MouseEventArgs e)
         {
-            try
+             
+            if (tslblMode.Text == "INVOICE MODE")
             {
-                if (tslblMode.Text == "INVOICE MODE" && Convert.ToInt32(row.Cells["Saved"].Value) != 1)
+                try
                 {
-                    using (SqlConnection sqlConnection = new SqlConnection(connection))
+                    if (Convert.ToInt32(row.Cells["Saved"].Value) != 1)
                     {
-                        sqlConnection.Open();
-                        string command = "DELETE FROM [dbo].[Transactions] " +
-                                         "WHERE [dbo].[Transactions].[InvoiceNumber] = @InvoiceNumber; ";
-                        SqlCommand sqlCommand = new SqlCommand(command, sqlConnection);
-                        try
+                        using (SqlConnection sqlConnection = new SqlConnection(connection))
                         {
-                            sqlCommand.Parameters.AddWithValue("@InvoiceNumber", row.Cells["Invoice Number"].Value.ToString());
-                            sqlCommand.CommandType = CommandType.Text;
-                            sqlCommand.ExecuteNonQuery();
-                            sqlConnection.Close();
-                            //SQL END
-
+                            sqlConnection.Open();
+                            string command =    "DELETE FROM [dbo].[Transactions] " +
+                                                "WHERE [dbo].[Transactions].[InvoiceNumber] = @InvoiceNumber; ";
+                            SqlCommand sqlCommand = new SqlCommand(command, sqlConnection);
+                            try
+                            {
+                                sqlCommand.Parameters.AddWithValue("@InvoiceNumber", row.Cells["Invoice Number"].Value.ToString());
+                                sqlCommand.CommandType = CommandType.Text;
+                                sqlCommand.ExecuteNonQuery();
+                                sqlConnection.Close();
+                                //SQL END
+                            }
+                            catch (System.Data.SqlClient.SqlException ex)
+                            {
+                                MessageBox.Show("Cannot delete invoice with products attached");
+                                MessageBox.Show(ex.Message);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show(ex.Message);
+                            }
                         }
-                        catch (System.Data.SqlClient.SqlException ex)
-                        {
-                            MessageBox.Show("Cannot delete invoice with products attached");
-                            MessageBox.Show(ex.Message);
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(ex.Message);
-                        }
+                        MessageBox.Show("Invoice Deleted!", "Invoice", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        tcFunctionInput.Visible = false;
+                        loadInvoices();
+                        tslblMode.Text = "INVOICE MODE";
                     }
-                    MessageBox.Show("Invoice Deleted!", "Invoice", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    tcFunctionInput.Visible = false;
-                    loadInvoices();
-                    tslblMode.Text = "INVOICE MODE";
+                    else
+                    {
+                        MessageBox.Show("Cannot Delete a Saved Invoice");
+                    }
                 }
-                else
+                catch (System.NullReferenceException ex)
                 {
-                    MessageBox.Show("Cannot Delete a Saved Invoice");
+                    MessageBox.Show("Select a row first");
+                    MessageBox.Show(ex.Message);
                 }
-            } catch (System.NullReferenceException ex)
-            {
-                MessageBox.Show("Select a row first");
-                MessageBox.Show(ex.Message);
             }
-            //DELETE INVOICE
+            //DELETE PRODUCT FROM INVOICE
+            else if(tslblMode.Text == "INVOICE VIEW MODE")
+            {
+                try
+                {
+                    if (invoiceSaved == 0)
+                    {
+                        using (SqlConnection sqlConnection = new SqlConnection(connection))
+                        {
+                            sqlConnection.Open();
+                            string command = "DELETE FROM [dbo].[InvoiceProducts] " +
+                            "WHERE [dbo].[InvoiceProducts].[InvoiceNumber] = @InvoiceNumber " +
+                            "AND [dbo].[InvoiceProducts].[VariantID] = @Variant";
+                            SqlCommand sqlCommand = new SqlCommand(command, sqlConnection);
+                            try
+                            {
+                                sqlCommand.Parameters.AddWithValue("@InvoiceNumber", tslblInvoiceNumber.Text);
+                                sqlCommand.Parameters.AddWithValue("@Variant", Convert.ToInt32(row.Cells["Stock Code"].Value));
+                                sqlCommand.CommandType = CommandType.Text;
+                                sqlCommand.ExecuteNonQuery();
+                                sqlConnection.Close();
+                                //SQL END
+                            }
+                            catch (System.Data.SqlClient.SqlException ex)
+                            {
+                                MessageBox.Show("Something went wrong");
+                                MessageBox.Show(ex.Message);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show(ex.Message);
+                                //MessageBox.Show(string.Format("{0}", Convert.ToInt32(row.Cells["Stock Code"].Value)));
+                            }
+                        }
+                        MessageBox.Show("Product Deleted from Invoice!", "Invoice", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Cannot delete products on a saved invoice");
+                    }
+                    
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Select a row first");
+                    MessageBox.Show(ex.Message);
+                }
+            }
+            
             
         }
-
-        ////SAVE, VIEW AND CANCEL EVENTS
-        //private void btnSave_Click(object sender, EventArgs e)
-        //{
-
-        //}
 
         //====================================================================//
         //TAB PAGE SAVE AND CANCEL BUTTON EVENTS
@@ -654,6 +743,21 @@ namespace PriceBookApplication
                     MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+            //SELECT ROW IN VIEW MODE
+            else if (tslblMode.Text == "INVOICE VIEW MODE")
+            {
+                try
+                {
+                    if (e.RowIndex >= 0)
+                    {
+                        row = this.dgvMain.Rows[e.RowIndex];
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
 
         //METHODS
@@ -699,7 +803,7 @@ namespace PriceBookApplication
                         "AS[Saved] " +
                 "FROM[dbo].[Transactions] " +
                         "INNER JOIN[dbo].[Stores] ON[dbo].[Transactions].[StoreID] = [dbo].[Stores].[StoreID] " +
-                        "ORDER BY[Date] ASC";
+                        "ORDER BY [Date] DESC";
                 SqlCommand sqlCommand = new SqlCommand(command, sqlConnection);
                 dataTable.Load(sqlCommand.ExecuteReader());
                 bindingSource.DataSource = dataTable;
@@ -758,6 +862,15 @@ namespace PriceBookApplication
             return invoiceNumber;
         }
 
-        
+        public decimal getSum()
+        {
+            decimal sum = 0;
+            for (int i = 0; i < dgvMain.Rows.Count; ++i)
+            {
+                sum += Convert.ToDecimal(dgvMain.Rows[i].Cells["Total Price"].Value);
+            }
+            return sum;
+        }
+
     }
 }
