@@ -52,9 +52,11 @@
             this.tcFunctionInput = new System.Windows.Forms.TabControl();
             this.tpInvoice = new System.Windows.Forms.TabPage();
             this.cmbxStore = new System.Windows.Forms.ComboBox();
+            this.dtpToDate = new System.Windows.Forms.DateTimePicker();
             this.dtpInvoice = new System.Windows.Forms.DateTimePicker();
             this.btnInvoiceCancel = new System.Windows.Forms.Button();
             this.tbxInvoiceAmount = new System.Windows.Forms.TextBox();
+            this.lblToDate = new System.Windows.Forms.Label();
             this.btnInvoiceSave = new System.Windows.Forms.Button();
             this.lblInvoiceDate = new System.Windows.Forms.Label();
             this.lblStore = new System.Windows.Forms.Label();
@@ -85,17 +87,35 @@
             this.label9 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.cmbxCategory = new System.Windows.Forms.ComboBox();
+            this.cbxProductDeleted = new System.Windows.Forms.CheckBox();
             this.cbxWeighted = new System.Windows.Forms.CheckBox();
             this.btnProductCancel = new System.Windows.Forms.Button();
             this.tbxUoM = new System.Windows.Forms.TextBox();
             this.btnProductSave = new System.Windows.Forms.Button();
             this.tbxRoM = new System.Windows.Forms.TextBox();
+            this.lblProductCode2 = new System.Windows.Forms.Label();
             this.lblUoM = new System.Windows.Forms.Label();
             this.lblRoM = new System.Windows.Forms.Label();
             this.lblCategory = new System.Windows.Forms.Label();
             this.tbxDescription = new System.Windows.Forms.TextBox();
             this.lblDescription = new System.Windows.Forms.Label();
-            this.lblProductCode2 = new System.Windows.Forms.Label();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.lblStoreID = new System.Windows.Forms.Label();
+            this.btnCancelStore = new System.Windows.Forms.Button();
+            this.btnSaveStore = new System.Windows.Forms.Button();
+            this.tbxStoreLocation = new System.Windows.Forms.TextBox();
+            this.lblStoreLocation = new System.Windows.Forms.Label();
+            this.tbxStoreName = new System.Windows.Forms.TextBox();
+            this.lblStoreName = new System.Windows.Forms.Label();
+            this.Category = new System.Windows.Forms.TabPage();
+            this.btnCategoryCancel = new System.Windows.Forms.Button();
+            this.btnCategorySave = new System.Windows.Forms.Button();
+            this.lblCategoryID = new System.Windows.Forms.Label();
+            this.tbxSubcategory = new System.Windows.Forms.TextBox();
+            this.lblSubcategory = new System.Windows.Forms.Label();
+            this.tbxMainCategory = new System.Windows.Forms.TextBox();
+            this.lblMainCategory = new System.Windows.Forms.Label();
+            this.cbxVariantDeleted = new System.Windows.Forms.CheckBox();
             this.objectPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbxReport)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbxStore)).BeginInit();
@@ -118,6 +138,8 @@
             this.tpInvoiceProduct.SuspendLayout();
             this.tpAddVariant.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.Category.SuspendLayout();
             this.SuspendLayout();
             // 
             // objectPanel
@@ -234,6 +256,7 @@
             this.pbxSearch.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbxSearch.TabIndex = 1;
             this.pbxSearch.TabStop = false;
+            this.pbxSearch.Click += new System.EventHandler(this.pbxSearch_Click);
             // 
             // pbxUpload
             // 
@@ -259,7 +282,7 @@
             // pbxDelete
             // 
             this.pbxDelete.Image = ((System.Drawing.Image)(resources.GetObject("pbxDelete.Image")));
-            this.pbxDelete.Location = new System.Drawing.Point(115, 3);
+            this.pbxDelete.Location = new System.Drawing.Point(115, 4);
             this.pbxDelete.Name = "pbxDelete";
             this.pbxDelete.Size = new System.Drawing.Size(50, 50);
             this.pbxDelete.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -336,11 +359,14 @@
             // 
             // tcFunctionInput
             // 
-            this.tcFunctionInput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.tcFunctionInput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tcFunctionInput.Controls.Add(this.tpInvoice);
             this.tcFunctionInput.Controls.Add(this.tpInvoiceProduct);
             this.tcFunctionInput.Controls.Add(this.tpAddVariant);
             this.tcFunctionInput.Controls.Add(this.tabPage3);
+            this.tcFunctionInput.Controls.Add(this.tabPage1);
+            this.tcFunctionInput.Controls.Add(this.Category);
             this.tcFunctionInput.Location = new System.Drawing.Point(0, 416);
             this.tcFunctionInput.Name = "tcFunctionInput";
             this.tcFunctionInput.SelectedIndex = 0;
@@ -350,9 +376,11 @@
             // tpInvoice
             // 
             this.tpInvoice.Controls.Add(this.cmbxStore);
+            this.tpInvoice.Controls.Add(this.dtpToDate);
             this.tpInvoice.Controls.Add(this.dtpInvoice);
             this.tpInvoice.Controls.Add(this.btnInvoiceCancel);
             this.tpInvoice.Controls.Add(this.tbxInvoiceAmount);
+            this.tpInvoice.Controls.Add(this.lblToDate);
             this.tpInvoice.Controls.Add(this.btnInvoiceSave);
             this.tpInvoice.Controls.Add(this.lblInvoiceDate);
             this.tpInvoice.Controls.Add(this.lblStore);
@@ -368,15 +396,25 @@
             // cmbxStore
             // 
             this.cmbxStore.FormattingEnabled = true;
-            this.cmbxStore.Location = new System.Drawing.Point(84, 18);
+            this.cmbxStore.Location = new System.Drawing.Point(6, 19);
             this.cmbxStore.Name = "cmbxStore";
-            this.cmbxStore.Size = new System.Drawing.Size(175, 21);
-            this.cmbxStore.TabIndex = 2;
+            this.cmbxStore.Size = new System.Drawing.Size(200, 21);
+            this.cmbxStore.TabIndex = 0;
+            // 
+            // dtpToDate
+            // 
+            this.dtpToDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpToDate.Location = new System.Drawing.Point(397, 20);
+            this.dtpToDate.MaxDate = new System.DateTime(2030, 12, 31, 0, 0, 0, 0);
+            this.dtpToDate.MinDate = new System.DateTime(2000, 1, 1, 0, 0, 0, 0);
+            this.dtpToDate.Name = "dtpToDate";
+            this.dtpToDate.Size = new System.Drawing.Size(100, 20);
+            this.dtpToDate.TabIndex = 4;
             // 
             // dtpInvoice
             // 
             this.dtpInvoice.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpInvoice.Location = new System.Drawing.Point(265, 18);
+            this.dtpInvoice.Location = new System.Drawing.Point(291, 20);
             this.dtpInvoice.MaxDate = new System.DateTime(2030, 12, 31, 0, 0, 0, 0);
             this.dtpInvoice.MinDate = new System.DateTime(2000, 1, 1, 0, 0, 0, 0);
             this.dtpInvoice.Name = "dtpInvoice";
@@ -389,24 +427,33 @@
             this.btnInvoiceCancel.Location = new System.Drawing.Point(698, 1);
             this.btnInvoiceCancel.Name = "btnInvoiceCancel";
             this.btnInvoiceCancel.Size = new System.Drawing.Size(75, 20);
-            this.btnInvoiceCancel.TabIndex = 5;
+            this.btnInvoiceCancel.TabIndex = 6;
             this.btnInvoiceCancel.Text = "Cancel";
             this.btnInvoiceCancel.UseVisualStyleBackColor = true;
             // 
             // tbxInvoiceAmount
             // 
-            this.tbxInvoiceAmount.Location = new System.Drawing.Point(3, 19);
+            this.tbxInvoiceAmount.Location = new System.Drawing.Point(212, 20);
             this.tbxInvoiceAmount.Name = "tbxInvoiceAmount";
             this.tbxInvoiceAmount.Size = new System.Drawing.Size(75, 20);
-            this.tbxInvoiceAmount.TabIndex = 1;
+            this.tbxInvoiceAmount.TabIndex = 2;
+            // 
+            // lblToDate
+            // 
+            this.lblToDate.AutoSize = true;
+            this.lblToDate.Location = new System.Drawing.Point(394, 5);
+            this.lblToDate.Name = "lblToDate";
+            this.lblToDate.Size = new System.Drawing.Size(46, 13);
+            this.lblToDate.TabIndex = 0;
+            this.lblToDate.Text = "To Date";
             // 
             // btnInvoiceSave
             // 
             this.btnInvoiceSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnInvoiceSave.Location = new System.Drawing.Point(698, 24);
+            this.btnInvoiceSave.Location = new System.Drawing.Point(698, 23);
             this.btnInvoiceSave.Name = "btnInvoiceSave";
             this.btnInvoiceSave.Size = new System.Drawing.Size(75, 20);
-            this.btnInvoiceSave.TabIndex = 4;
+            this.btnInvoiceSave.TabIndex = 5;
             this.btnInvoiceSave.Text = "Save";
             this.btnInvoiceSave.UseVisualStyleBackColor = true;
             this.btnInvoiceSave.Click += new System.EventHandler(this.btnInvoiceSave_Click);
@@ -414,7 +461,7 @@
             // lblInvoiceDate
             // 
             this.lblInvoiceDate.AutoSize = true;
-            this.lblInvoiceDate.Location = new System.Drawing.Point(262, 3);
+            this.lblInvoiceDate.Location = new System.Drawing.Point(290, 5);
             this.lblInvoiceDate.Name = "lblInvoiceDate";
             this.lblInvoiceDate.Size = new System.Drawing.Size(68, 13);
             this.lblInvoiceDate.TabIndex = 0;
@@ -423,7 +470,7 @@
             // lblStore
             // 
             this.lblStore.AutoSize = true;
-            this.lblStore.Location = new System.Drawing.Point(82, 4);
+            this.lblStore.Location = new System.Drawing.Point(3, 5);
             this.lblStore.Name = "lblStore";
             this.lblStore.Size = new System.Drawing.Size(32, 13);
             this.lblStore.TabIndex = 0;
@@ -432,7 +479,7 @@
             // lblInvoiceAmount
             // 
             this.lblInvoiceAmount.AutoSize = true;
-            this.lblInvoiceAmount.Location = new System.Drawing.Point(3, 3);
+            this.lblInvoiceAmount.Location = new System.Drawing.Point(209, 5);
             this.lblInvoiceAmount.Name = "lblInvoiceAmount";
             this.lblInvoiceAmount.Size = new System.Drawing.Size(81, 13);
             this.lblInvoiceAmount.TabIndex = 0;
@@ -464,7 +511,7 @@
             this.cbxSale.Location = new System.Drawing.Point(233, 21);
             this.cbxSale.Name = "cbxSale";
             this.cbxSale.Size = new System.Drawing.Size(47, 17);
-            this.cbxSale.TabIndex = 4;
+            this.cbxSale.TabIndex = 3;
             this.cbxSale.Text = "Sale";
             this.cbxSale.UseVisualStyleBackColor = true;
             // 
@@ -473,7 +520,7 @@
             this.tbxTotalPrice.Location = new System.Drawing.Point(152, 19);
             this.tbxTotalPrice.Name = "tbxTotalPrice";
             this.tbxTotalPrice.Size = new System.Drawing.Size(75, 20);
-            this.tbxTotalPrice.TabIndex = 3;
+            this.tbxTotalPrice.TabIndex = 2;
             // 
             // btnInvoiceProductCancel
             // 
@@ -490,7 +537,7 @@
             this.tbxWeight.Location = new System.Drawing.Point(59, 19);
             this.tbxWeight.Name = "tbxWeight";
             this.tbxWeight.Size = new System.Drawing.Size(50, 20);
-            this.tbxWeight.TabIndex = 2;
+            this.tbxWeight.TabIndex = 1;
             // 
             // btnInvoiceProductSave
             // 
@@ -535,7 +582,7 @@
             this.tbxQuantity.Location = new System.Drawing.Point(3, 19);
             this.tbxQuantity.Name = "tbxQuantity";
             this.tbxQuantity.Size = new System.Drawing.Size(50, 20);
-            this.tbxQuantity.TabIndex = 1;
+            this.tbxQuantity.TabIndex = 0;
             // 
             // lblQuantity
             // 
@@ -548,6 +595,7 @@
             // 
             // tpAddVariant
             // 
+            this.tpAddVariant.Controls.Add(this.cbxVariantDeleted);
             this.tpAddVariant.Controls.Add(this.tbxPackSize);
             this.tpAddVariant.Controls.Add(this.tbxBrandName);
             this.tpAddVariant.Controls.Add(this.btnVariantCancel);
@@ -573,14 +621,14 @@
             this.tbxPackSize.Location = new System.Drawing.Point(321, 19);
             this.tbxPackSize.Name = "tbxPackSize";
             this.tbxPackSize.Size = new System.Drawing.Size(75, 20);
-            this.tbxPackSize.TabIndex = 5;
+            this.tbxPackSize.TabIndex = 3;
             // 
             // tbxBrandName
             // 
             this.tbxBrandName.Location = new System.Drawing.Point(215, 19);
             this.tbxBrandName.Name = "tbxBrandName";
             this.tbxBrandName.Size = new System.Drawing.Size(100, 20);
-            this.tbxBrandName.TabIndex = 5;
+            this.tbxBrandName.TabIndex = 2;
             // 
             // btnVariantCancel
             // 
@@ -588,7 +636,7 @@
             this.btnVariantCancel.Location = new System.Drawing.Point(698, 1);
             this.btnVariantCancel.Name = "btnVariantCancel";
             this.btnVariantCancel.Size = new System.Drawing.Size(75, 20);
-            this.btnVariantCancel.TabIndex = 2;
+            this.btnVariantCancel.TabIndex = 7;
             this.btnVariantCancel.Text = "Cancel";
             this.btnVariantCancel.UseVisualStyleBackColor = true;
             // 
@@ -607,7 +655,7 @@
             this.btnVariantSave.Location = new System.Drawing.Point(698, 24);
             this.btnVariantSave.Name = "btnVariantSave";
             this.btnVariantSave.Size = new System.Drawing.Size(75, 20);
-            this.btnVariantSave.TabIndex = 2;
+            this.btnVariantSave.TabIndex = 6;
             this.btnVariantSave.Text = "Save";
             this.btnVariantSave.UseVisualStyleBackColor = true;
             this.btnVariantSave.Click += new System.EventHandler(this.btnVariantSave_Click);
@@ -615,10 +663,10 @@
             // lblProductCode
             // 
             this.lblProductCode.AutoSize = true;
-            this.lblProductCode.Location = new System.Drawing.Point(402, 3);
+            this.lblProductCode.Location = new System.Drawing.Point(508, 22);
             this.lblProductCode.Name = "lblProductCode";
             this.lblProductCode.Size = new System.Drawing.Size(69, 13);
-            this.lblProductCode.TabIndex = 2;
+            this.lblProductCode.TabIndex = 5;
             this.lblProductCode.Text = "ProductCode";
             // 
             // label10
@@ -635,7 +683,7 @@
             this.tbxBarCode.Location = new System.Drawing.Point(109, 19);
             this.tbxBarCode.Name = "tbxBarCode";
             this.tbxBarCode.Size = new System.Drawing.Size(100, 20);
-            this.tbxBarCode.TabIndex = 6;
+            this.tbxBarCode.TabIndex = 1;
             // 
             // label7
             // 
@@ -660,7 +708,7 @@
             this.tbxDescription02.Location = new System.Drawing.Point(3, 19);
             this.tbxDescription02.Name = "tbxDescription02";
             this.tbxDescription02.Size = new System.Drawing.Size(100, 20);
-            this.tbxDescription02.TabIndex = 7;
+            this.tbxDescription02.TabIndex = 0;
             // 
             // label9
             // 
@@ -674,6 +722,7 @@
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.cmbxCategory);
+            this.tabPage3.Controls.Add(this.cbxProductDeleted);
             this.tabPage3.Controls.Add(this.cbxWeighted);
             this.tabPage3.Controls.Add(this.btnProductCancel);
             this.tabPage3.Controls.Add(this.tbxUoM);
@@ -696,18 +745,28 @@
             // cmbxCategory
             // 
             this.cmbxCategory.FormattingEnabled = true;
-            this.cmbxCategory.Location = new System.Drawing.Point(112, 17);
+            this.cmbxCategory.Location = new System.Drawing.Point(164, 17);
             this.cmbxCategory.Name = "cmbxCategory";
-            this.cmbxCategory.Size = new System.Drawing.Size(100, 21);
-            this.cmbxCategory.TabIndex = 17;
+            this.cmbxCategory.Size = new System.Drawing.Size(150, 21);
+            this.cmbxCategory.TabIndex = 1;
+            // 
+            // cbxProductDeleted
+            // 
+            this.cbxProductDeleted.AutoSize = true;
+            this.cbxProductDeleted.Location = new System.Drawing.Point(535, 20);
+            this.cbxProductDeleted.Name = "cbxProductDeleted";
+            this.cbxProductDeleted.Size = new System.Drawing.Size(63, 17);
+            this.cbxProductDeleted.TabIndex = 5;
+            this.cbxProductDeleted.Text = "Deleted";
+            this.cbxProductDeleted.UseVisualStyleBackColor = true;
             // 
             // cbxWeighted
             // 
             this.cbxWeighted.AutoSize = true;
-            this.cbxWeighted.Location = new System.Drawing.Point(389, 20);
+            this.cbxWeighted.Location = new System.Drawing.Point(457, 20);
             this.cbxWeighted.Name = "cbxWeighted";
             this.cbxWeighted.Size = new System.Drawing.Size(72, 17);
-            this.cbxWeighted.TabIndex = 16;
+            this.cbxWeighted.TabIndex = 4;
             this.cbxWeighted.Text = "Weighted";
             this.cbxWeighted.UseVisualStyleBackColor = true;
             // 
@@ -717,16 +776,16 @@
             this.btnProductCancel.Location = new System.Drawing.Point(698, 1);
             this.btnProductCancel.Name = "btnProductCancel";
             this.btnProductCancel.Size = new System.Drawing.Size(75, 20);
-            this.btnProductCancel.TabIndex = 2;
+            this.btnProductCancel.TabIndex = 7;
             this.btnProductCancel.Text = "Cancel";
             this.btnProductCancel.UseVisualStyleBackColor = true;
             // 
             // tbxUoM
             // 
-            this.tbxUoM.Location = new System.Drawing.Point(333, 18);
+            this.tbxUoM.Location = new System.Drawing.Point(401, 18);
             this.tbxUoM.Name = "tbxUoM";
             this.tbxUoM.Size = new System.Drawing.Size(50, 20);
-            this.tbxUoM.TabIndex = 12;
+            this.tbxUoM.TabIndex = 3;
             // 
             // btnProductSave
             // 
@@ -734,40 +793,49 @@
             this.btnProductSave.Location = new System.Drawing.Point(698, 24);
             this.btnProductSave.Name = "btnProductSave";
             this.btnProductSave.Size = new System.Drawing.Size(75, 20);
-            this.btnProductSave.TabIndex = 2;
+            this.btnProductSave.TabIndex = 6;
             this.btnProductSave.Text = "Save";
             this.btnProductSave.UseVisualStyleBackColor = true;
             this.btnProductSave.Click += new System.EventHandler(this.btnProductSave_Click);
             // 
             // tbxRoM
             // 
-            this.tbxRoM.Location = new System.Drawing.Point(218, 18);
+            this.tbxRoM.Location = new System.Drawing.Point(320, 18);
             this.tbxRoM.Name = "tbxRoM";
-            this.tbxRoM.Size = new System.Drawing.Size(109, 20);
-            this.tbxRoM.TabIndex = 13;
+            this.tbxRoM.Size = new System.Drawing.Size(75, 20);
+            this.tbxRoM.TabIndex = 2;
+            // 
+            // lblProductCode2
+            // 
+            this.lblProductCode2.AutoSize = true;
+            this.lblProductCode2.Location = new System.Drawing.Point(604, 20);
+            this.lblProductCode2.Name = "lblProductCode2";
+            this.lblProductCode2.Size = new System.Drawing.Size(72, 13);
+            this.lblProductCode2.TabIndex = 8;
+            this.lblProductCode2.Text = "Product Code";
             // 
             // lblUoM
             // 
             this.lblUoM.AutoSize = true;
-            this.lblUoM.Location = new System.Drawing.Point(330, 3);
+            this.lblUoM.Location = new System.Drawing.Point(398, 3);
             this.lblUoM.Name = "lblUoM";
-            this.lblUoM.Size = new System.Drawing.Size(82, 13);
+            this.lblUoM.Size = new System.Drawing.Size(30, 13);
             this.lblUoM.TabIndex = 8;
-            this.lblUoM.Text = "Unit of Measure";
+            this.lblUoM.Text = "UoM";
             // 
             // lblRoM
             // 
             this.lblRoM.AutoSize = true;
-            this.lblRoM.Location = new System.Drawing.Point(215, 3);
+            this.lblRoM.Location = new System.Drawing.Point(317, 3);
             this.lblRoM.Name = "lblRoM";
-            this.lblRoM.Size = new System.Drawing.Size(109, 13);
+            this.lblRoM.Size = new System.Drawing.Size(30, 13);
             this.lblRoM.TabIndex = 9;
-            this.lblRoM.Text = "Rate of Measurement";
+            this.lblRoM.Text = "RoM";
             // 
             // lblCategory
             // 
             this.lblCategory.AutoSize = true;
-            this.lblCategory.Location = new System.Drawing.Point(112, 3);
+            this.lblCategory.Location = new System.Drawing.Point(161, 3);
             this.lblCategory.Name = "lblCategory";
             this.lblCategory.Size = new System.Drawing.Size(49, 13);
             this.lblCategory.TabIndex = 10;
@@ -775,28 +843,187 @@
             // 
             // tbxDescription
             // 
-            this.tbxDescription.Location = new System.Drawing.Point(6, 18);
+            this.tbxDescription.Location = new System.Drawing.Point(8, 18);
             this.tbxDescription.Name = "tbxDescription";
-            this.tbxDescription.Size = new System.Drawing.Size(100, 20);
-            this.tbxDescription.TabIndex = 15;
+            this.tbxDescription.Size = new System.Drawing.Size(150, 20);
+            this.tbxDescription.TabIndex = 0;
             // 
             // lblDescription
             // 
             this.lblDescription.AutoSize = true;
-            this.lblDescription.Location = new System.Drawing.Point(3, 3);
+            this.lblDescription.Location = new System.Drawing.Point(8, 3);
             this.lblDescription.Name = "lblDescription";
             this.lblDescription.Size = new System.Drawing.Size(60, 13);
             this.lblDescription.TabIndex = 11;
             this.lblDescription.Text = "Description";
             // 
-            // lblProductCode2
+            // tabPage1
             // 
-            this.lblProductCode2.AutoSize = true;
-            this.lblProductCode2.Location = new System.Drawing.Point(456, 5);
-            this.lblProductCode2.Name = "lblProductCode2";
-            this.lblProductCode2.Size = new System.Drawing.Size(72, 13);
-            this.lblProductCode2.TabIndex = 8;
-            this.lblProductCode2.Text = "Product Code";
+            this.tabPage1.Controls.Add(this.lblStoreID);
+            this.tabPage1.Controls.Add(this.btnCancelStore);
+            this.tabPage1.Controls.Add(this.btnSaveStore);
+            this.tabPage1.Controls.Add(this.tbxStoreLocation);
+            this.tabPage1.Controls.Add(this.lblStoreLocation);
+            this.tabPage1.Controls.Add(this.tbxStoreName);
+            this.tabPage1.Controls.Add(this.lblStoreName);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(776, 44);
+            this.tabPage1.TabIndex = 4;
+            this.tabPage1.Text = "Store";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // lblStoreID
+            // 
+            this.lblStoreID.AutoSize = true;
+            this.lblStoreID.Location = new System.Drawing.Point(320, 21);
+            this.lblStoreID.Name = "lblStoreID";
+            this.lblStoreID.Size = new System.Drawing.Size(43, 13);
+            this.lblStoreID.TabIndex = 20;
+            this.lblStoreID.Text = "StoreID";
+            // 
+            // btnCancelStore
+            // 
+            this.btnCancelStore.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCancelStore.Location = new System.Drawing.Point(698, 1);
+            this.btnCancelStore.Name = "btnCancelStore";
+            this.btnCancelStore.Size = new System.Drawing.Size(75, 20);
+            this.btnCancelStore.TabIndex = 18;
+            this.btnCancelStore.Text = "Cancel";
+            this.btnCancelStore.UseVisualStyleBackColor = true;
+            // 
+            // btnSaveStore
+            // 
+            this.btnSaveStore.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSaveStore.Location = new System.Drawing.Point(698, 24);
+            this.btnSaveStore.Name = "btnSaveStore";
+            this.btnSaveStore.Size = new System.Drawing.Size(75, 20);
+            this.btnSaveStore.TabIndex = 19;
+            this.btnSaveStore.Text = "Save";
+            this.btnSaveStore.UseVisualStyleBackColor = true;
+            this.btnSaveStore.Click += new System.EventHandler(this.btnSaveStore_Click);
+            // 
+            // tbxStoreLocation
+            // 
+            this.tbxStoreLocation.Location = new System.Drawing.Point(164, 18);
+            this.tbxStoreLocation.Name = "tbxStoreLocation";
+            this.tbxStoreLocation.Size = new System.Drawing.Size(150, 20);
+            this.tbxStoreLocation.TabIndex = 17;
+            // 
+            // lblStoreLocation
+            // 
+            this.lblStoreLocation.AutoSize = true;
+            this.lblStoreLocation.Location = new System.Drawing.Point(161, 3);
+            this.lblStoreLocation.Name = "lblStoreLocation";
+            this.lblStoreLocation.Size = new System.Drawing.Size(76, 13);
+            this.lblStoreLocation.TabIndex = 16;
+            this.lblStoreLocation.Text = "Store Location";
+            // 
+            // tbxStoreName
+            // 
+            this.tbxStoreName.Location = new System.Drawing.Point(8, 18);
+            this.tbxStoreName.Name = "tbxStoreName";
+            this.tbxStoreName.Size = new System.Drawing.Size(150, 20);
+            this.tbxStoreName.TabIndex = 17;
+            // 
+            // lblStoreName
+            // 
+            this.lblStoreName.AutoSize = true;
+            this.lblStoreName.Location = new System.Drawing.Point(5, 3);
+            this.lblStoreName.Name = "lblStoreName";
+            this.lblStoreName.Size = new System.Drawing.Size(63, 13);
+            this.lblStoreName.TabIndex = 16;
+            this.lblStoreName.Text = "Store Name";
+            // 
+            // Category
+            // 
+            this.Category.Controls.Add(this.btnCategoryCancel);
+            this.Category.Controls.Add(this.btnCategorySave);
+            this.Category.Controls.Add(this.lblCategoryID);
+            this.Category.Controls.Add(this.tbxSubcategory);
+            this.Category.Controls.Add(this.lblSubcategory);
+            this.Category.Controls.Add(this.tbxMainCategory);
+            this.Category.Controls.Add(this.lblMainCategory);
+            this.Category.Location = new System.Drawing.Point(4, 22);
+            this.Category.Name = "Category";
+            this.Category.Padding = new System.Windows.Forms.Padding(3);
+            this.Category.Size = new System.Drawing.Size(776, 44);
+            this.Category.TabIndex = 5;
+            this.Category.Text = "Category";
+            this.Category.UseVisualStyleBackColor = true;
+            // 
+            // btnCategoryCancel
+            // 
+            this.btnCategoryCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCategoryCancel.Location = new System.Drawing.Point(698, 2);
+            this.btnCategoryCancel.Name = "btnCategoryCancel";
+            this.btnCategoryCancel.Size = new System.Drawing.Size(75, 20);
+            this.btnCategoryCancel.TabIndex = 3;
+            this.btnCategoryCancel.Text = "Cancel";
+            this.btnCategoryCancel.UseVisualStyleBackColor = true;
+            // 
+            // btnCategorySave
+            // 
+            this.btnCategorySave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCategorySave.Location = new System.Drawing.Point(698, 25);
+            this.btnCategorySave.Name = "btnCategorySave";
+            this.btnCategorySave.Size = new System.Drawing.Size(75, 20);
+            this.btnCategorySave.TabIndex = 2;
+            this.btnCategorySave.Text = "Save";
+            this.btnCategorySave.UseVisualStyleBackColor = true;
+            this.btnCategorySave.Click += new System.EventHandler(this.btnCategorySave_Click);
+            // 
+            // lblCategoryID
+            // 
+            this.lblCategoryID.AutoSize = true;
+            this.lblCategoryID.Location = new System.Drawing.Point(320, 21);
+            this.lblCategoryID.Name = "lblCategoryID";
+            this.lblCategoryID.Size = new System.Drawing.Size(60, 13);
+            this.lblCategoryID.TabIndex = 25;
+            this.lblCategoryID.Text = "CategoryID";
+            // 
+            // tbxSubcategory
+            // 
+            this.tbxSubcategory.Location = new System.Drawing.Point(164, 18);
+            this.tbxSubcategory.Name = "tbxSubcategory";
+            this.tbxSubcategory.Size = new System.Drawing.Size(150, 20);
+            this.tbxSubcategory.TabIndex = 1;
+            // 
+            // lblSubcategory
+            // 
+            this.lblSubcategory.AutoSize = true;
+            this.lblSubcategory.Location = new System.Drawing.Point(161, 3);
+            this.lblSubcategory.Name = "lblSubcategory";
+            this.lblSubcategory.Size = new System.Drawing.Size(67, 13);
+            this.lblSubcategory.TabIndex = 21;
+            this.lblSubcategory.Text = "Subcategory";
+            // 
+            // tbxMainCategory
+            // 
+            this.tbxMainCategory.Location = new System.Drawing.Point(8, 18);
+            this.tbxMainCategory.Name = "tbxMainCategory";
+            this.tbxMainCategory.Size = new System.Drawing.Size(150, 20);
+            this.tbxMainCategory.TabIndex = 0;
+            // 
+            // lblMainCategory
+            // 
+            this.lblMainCategory.AutoSize = true;
+            this.lblMainCategory.Location = new System.Drawing.Point(5, 3);
+            this.lblMainCategory.Name = "lblMainCategory";
+            this.lblMainCategory.Size = new System.Drawing.Size(75, 13);
+            this.lblMainCategory.TabIndex = 22;
+            this.lblMainCategory.Text = "Main Category";
+            // 
+            // cbxVariantDeleted
+            // 
+            this.cbxVariantDeleted.AutoSize = true;
+            this.cbxVariantDeleted.Location = new System.Drawing.Point(439, 21);
+            this.cbxVariantDeleted.Name = "cbxVariantDeleted";
+            this.cbxVariantDeleted.Size = new System.Drawing.Size(63, 17);
+            this.cbxVariantDeleted.TabIndex = 4;
+            this.cbxVariantDeleted.Text = "Deleted";
+            this.cbxVariantDeleted.UseVisualStyleBackColor = true;
             // 
             // Main
             // 
@@ -839,6 +1066,10 @@
             this.tpAddVariant.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
+            this.Category.ResumeLayout(false);
+            this.Category.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -913,6 +1144,26 @@
         private System.Windows.Forms.PictureBox pbxUpload;
         private System.Windows.Forms.PictureBox pbxView;
         private System.Windows.Forms.Label lblProductCode2;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.Button btnCancelStore;
+        private System.Windows.Forms.Button btnSaveStore;
+        private System.Windows.Forms.TextBox tbxStoreLocation;
+        private System.Windows.Forms.Label lblStoreLocation;
+        private System.Windows.Forms.TextBox tbxStoreName;
+        private System.Windows.Forms.Label lblStoreName;
+        private System.Windows.Forms.Label lblStoreID;
+        private System.Windows.Forms.TabPage Category;
+        private System.Windows.Forms.Label lblCategoryID;
+        private System.Windows.Forms.TextBox tbxSubcategory;
+        private System.Windows.Forms.Label lblSubcategory;
+        private System.Windows.Forms.TextBox tbxMainCategory;
+        private System.Windows.Forms.Label lblMainCategory;
+        private System.Windows.Forms.Button btnCategoryCancel;
+        private System.Windows.Forms.Button btnCategorySave;
+        private System.Windows.Forms.DateTimePicker dtpToDate;
+        private System.Windows.Forms.Label lblToDate;
+        private System.Windows.Forms.CheckBox cbxProductDeleted;
+        private System.Windows.Forms.CheckBox cbxVariantDeleted;
     }
 }
 

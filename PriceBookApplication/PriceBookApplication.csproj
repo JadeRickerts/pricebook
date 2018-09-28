@@ -52,12 +52,6 @@
     <Compile Include="ExistingOrNewProduct.Designer.cs">
       <DependentUpon>ExistingOrNewProduct.cs</DependentUpon>
     </Compile>
-    <Compile Include="InvoiceDetails.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InvoiceDetails.Designer.cs">
-      <DependentUpon>InvoiceDetails.cs</DependentUpon>
-    </Compile>
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -69,9 +63,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="ExistingOrNewProduct.resx">
       <DependentUpon>ExistingOrNewProduct.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InvoiceDetails.resx">
-      <DependentUpon>InvoiceDetails.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
